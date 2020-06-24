@@ -5,7 +5,7 @@ class Admin extends CI_Controller
 
 function __construct()
     {
-        // this is your constructor cotroller new controller controller.
+        // this is your constructor new branch version 1.1.
         parent::__construct();
         $this->load->helper('form');
         $this->load->library('session');
