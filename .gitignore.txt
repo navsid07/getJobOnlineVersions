@@ -1,0 +1,11 @@
+images\*
+icons\*
+fonts\*
+fav\*
+EmployeeProfilePic\*
+emailimage\*
+editorImage\*
+editor\*
+css\*
+certificateImages\*
+application\*

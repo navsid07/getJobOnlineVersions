@@ -1,0 +1,162 @@
+<?php 
+class PaginationTestModel extends CI_Model
+
+{
+
+   public function __construct() {
+
+       parent::__construct();
+
+   }
+
+
+
+   public function record_count() {
+
+       return $this->db->count_all("submitjob");
+
+   }
+
+
+
+
+   public function fetch_departments($limit, $start) {
+
+       $this->db->limit($limit, $start);
+
+       $query = $this->db->get("submitjob");
+
+       if ($query->num_rows() > 0) {
+
+           foreach ($query->result() as $row) {
+
+               $data[] = $row;
+
+           }
+
+           return json_decode(json_encode($data),TRUE);
+
+       }
+
+       return false;
+
+   }
+
+
+
+   public function record_count_featured_Employee() {
+
+       return $this->db->count_all("employer_info");
+
+   }
+   
+
+
+
+   public function fetch_departments_featured_employee($limit, $start) {
+
+       $this->db->limit($limit, $start);
+
+       $query = $this->db->get("employer_info");
+
+       if ($query->num_rows() > 0) {
+
+           foreach ($query->result() as $row) {
+
+               $data[] = $row;
+
+           }
+
+           return json_decode(json_encode($data),TRUE);
+
+       }
+
+       return false;
+
+   }
+
+
+//recently joined  tab in recruiter login
+
+
+
+   public function record_count_recently_joined() {
+
+       return $this->db->count_all("employer_info");
+
+   }
+   
+
+
+
+   public function fetch_departments_recently_joined($limit, $start) {
+
+       $this->db->limit($limit, $start);
+
+       $query = $this->db->order_by('employee_uid','desc')
+       ->get("employer_info");
+
+       if ($query->num_rows() > 0) {
+
+           foreach ($query->result() as $row) {
+
+               $data[] = $row;
+
+           }
+
+           return json_decode(json_encode($data),TRUE);
+
+       }
+
+       return false;
+
+   }
+
+
+   //pagination test model
+
+    
+    /*
+     * Fetch posts data from the database
+     * @param id returns a single record if specified, otherwise all records
+     */
+    function getRows($params = array()){
+        $this->db->select('*');
+        $this->db->from($this->tblName);
+        
+        //fetch data by conditions
+        if(array_key_exists("where",$params)){
+            foreach ($params['where'] as $key => $value){
+                $this->db->where($key,$value);
+            }
+        }
+        
+        if(array_key_exists("order_by",$params)){
+            $this->db->order_by($params['order_by']);
+        }
+        
+        if(array_key_exists("id",$params)){
+            $this->db->where('id',$params['id']);
+            $query = $this->db->get();
+            $result = $query->row_array();
+        }else{
+            //set start and limit
+            if(array_key_exists("start",$params) && array_key_exists("limit",$params)){
+                $this->db->limit($params['limit'],$params['start']);
+            }elseif(!array_key_exists("start",$params) && array_key_exists("limit",$params)){
+                $this->db->limit($params['limit']);
+            }
+            
+            if(array_key_exists("returnType",$params) && $params['returnType'] == 'count'){
+                $result = $this->db->count_all_results();
+            }else{
+                $query = $this->db->get();
+                $result = ($query->num_rows() > 0)?$query->result_array():FALSE;
+            }
+        }
+
+        //return fetched data
+        return $result;
+    }
+  }
+?>
